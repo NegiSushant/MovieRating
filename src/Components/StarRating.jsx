@@ -1,26 +1,15 @@
 import { useState } from "react";
-// import PropTypes from "prop-types";
+import PropTypes from "prop-types";
 
-const containerStyle = {
-  display: "flex",
-  alignItems: "center",
-  gap: "16px",
+StarRating.propTypes = {
+  maxRating: PropTypes.number.isRequired,
+  defaultRating: PropTypes.number,
+  color: PropTypes.string,
+  size: PropTypes.number,
+  messages: PropTypes.array,
+  className: PropTypes.string,
+  onSetRating: PropTypes.func,
 };
-
-const starContainerStyle = {
-  display: "flex",
-  //   gap: "4px",
-};
-
-// StarRating.prototype = {
-//   maxRating: PropTypes.number.isRequired,
-//   defaultRating: PropTypes.number,
-//   color: PropTypes.string,
-//   size: PropTypes.number,
-//   messages: PropTypes.array,
-//   className: PropTypes.string,
-//   onSetRating: PropTypes.func,
-// };
 
 export default function StarRating({
   maxRating = 5,
@@ -34,24 +23,16 @@ export default function StarRating({
   const [rating, setRating] = useState(defaultRating);
   const [tempRating, setTempRating] = useState(0);
 
-  function handleRating(rating) {
-    setRating(rating);
-    onSetRating(rating);
+  function handleRating(r) {
+    setRating(r);
+    onSetRating?.(r);
   }
 
-  const textStyle = {
-    lineHeight: "0",
-    margin: "0",
-    color,
-    fontSize: `${size / 1.5}px`,
-  };
-
   return (
-    <div style={containerStyle} className={className}>
-      {/* for star */}
-      <div style={starContainerStyle}>
+    <div className={`flex items-center gap-4 ${className}`}>
+      {/* Stars */}
+      <div className="flex">
         {Array.from({ length: maxRating }, (_, i) => (
-          //   <span>S{i + 1}</span>
           <Star
             key={i}
             onRate={() => handleRating(i + 1)}
@@ -63,28 +44,26 @@ export default function StarRating({
           />
         ))}
       </div>
-      {/* For text */}
-      <div style={textStyle}>
+
+      {/* Text */}
+      <p
+        className="m-0 leading-none"
+        style={{ color, fontSize: `${size / 1.5}px` }}
+      >
         {messages.length === maxRating
           ? messages[tempRating ? tempRating - 1 : rating - 1]
           : tempRating || rating || ""}
-      </div>
+      </p>
     </div>
   );
 }
 
 function Star({ onRate, full, onHoverIn, onHoverOut, color, size }) {
-  const starStyle = {
-    width: `${size}px`,
-    height: `${size}px`,
-    display: "block",
-    cursor: "pointer",
-  };
-
   return (
     <span
       role="button"
-      style={starStyle}
+      className="cursor-pointer block"
+      style={{ width: size, height: size }}
       onClick={onRate}
       onMouseEnter={onHoverIn}
       onMouseLeave={onHoverOut}
@@ -104,11 +83,11 @@ function Star({ onRate, full, onHoverIn, onHoverOut, color, size }) {
           fill="none"
           viewBox="0 0 24 24"
           stroke={color}
+          strokeWidth={2}
         >
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
-            strokeWidth="{2}"
             d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
           />
         </svg>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-const KEY2 = "7ab67c1a";
+const KEY = import.meta.env.VITE_OMDB_API_KEY;
 
 export function useMovies(query) {
   const [movies, setMovies] = useState([]);
@@ -8,7 +8,6 @@ export function useMovies(query) {
 
   useEffect(
     function () {
-    //   callback?.();
       const controller = new AbortController();
 
       async function fetchMovies() {
@@ -16,7 +15,7 @@ export function useMovies(query) {
           setIsLoading(true);
           setError("");
           const res = await fetch(
-            `http://www.omdbapi.com/?apikey=${KEY2}&s=${query}`,
+            `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`,
             { signal: controller.signal }
           );
 
@@ -29,7 +28,6 @@ export function useMovies(query) {
           setError("");
         } catch (err) {
           if (err.name !== "AbortError") {
-            // console.error(err.message);
             setError(err.message);
           }
         } finally {
